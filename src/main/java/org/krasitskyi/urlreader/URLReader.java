@@ -23,16 +23,22 @@ public class URLReader extends Reader {
     public void close() throws IOException {
         this.bufferedReader.close();
     }
-
-    public void writeURLContentToFile(String filePath) throws IOException {
+    public void writeURLContentToFile(String filePath) {
         StringBuilder builder = new StringBuilder();
         char[] buffer = new char[1024];
         int readChars;
-        while ((readChars = bufferedReader.read(buffer, 0, buffer.length)) != -1) {
-            builder.append(buffer, 0, readChars);
+        try {
+            while ((readChars = bufferedReader.read(buffer, 0, buffer.length)) != -1) {
+                builder.append(buffer, 0, readChars);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+
         }
-        FileWriter fileWriter = new FileWriter(filePath);
-        fileWriter.write(builder.toString());
-        fileWriter.close();
+        try (FileWriter fileWriter = new FileWriter(filePath)) {
+            fileWriter.write(builder.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
