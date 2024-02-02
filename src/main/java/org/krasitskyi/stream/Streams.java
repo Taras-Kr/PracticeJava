@@ -35,16 +35,19 @@ public class Streams {
      * @param outputFilePath output file path
      * @throws IOException if input file not found
      */
-    public void copyFileContentWithBufferedStreams(String inputFilePath, String outputFilePath) throws IOException {
-        BufferedInputStream in = new BufferedInputStream(new FileInputStream(inputFilePath), 1024);
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outputFilePath), 1024);
-        int bytesRead = in.read();
-        while (bytesRead != -1) {
-            out.write(bytesRead);
-            bytesRead = in.read();
+    public void copyFileContentWithBufferedStreams(String inputFilePath, String outputFilePath) {
+        try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(inputFilePath), 1024);
+             BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outputFilePath), 1024)) {
+            int bytesRead = in.read();
+            while (bytesRead != -1) {
+                out.write(bytesRead);
+                bytesRead = in.read();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        in.close();
-        out.close();
+
+
     }
 
     /**
@@ -65,7 +68,7 @@ public class Streams {
         FileInputStream in = new FileInputStream(inputFile);
         byte[] buffer = new byte[in.available()];
         in.read(buffer);
-        String fileContent  = new String (buffer);
+        String fileContent = new String(buffer);
         System.out.println(fileContent);
         in.close();
     }
